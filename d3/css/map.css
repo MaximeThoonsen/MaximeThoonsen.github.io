@@ -1,0 +1,131 @@
+#graticule {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .5;
+    stroke-width: .5px;
+}
+
+#container {
+    padding:20px;
+    clear:both;
+}
+
+.hidden {
+    display: none;
+}
+div.tooltip {
+    color: #222;
+    background: #fff;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    box-shadow: 0px 0px 2px 0px #a6a6a6;
+    opacity: 0.9;
+    position: absolute;
+}
+
+ .worldmap {
+    fill: none;
+    position: absolute;
+    top: 0;
+    left: 150px;
+}
+ .continent {
+    -webkit-transition: opacity ease 0.2s;
+    transition: opacity ease 0.2s;
+    opacity: 1;
+    stroke: #efeef3;
+    stroke-width: 0px;
+}
+ .continent .continent-name {
+    -webkit-transition: opacity ease 0.4s;
+    transition: opacity ease 0.4s;
+    fill: #303241;
+    font-size: 2em;
+    font-weight: bold;
+    opacity: 1;
+}
+ .continent.focused {
+    stroke-width: 0.5px;
+}
+ .continent.focused .continent-name {
+    opacity: 0;
+}
+ .continent.unfocused {
+    opacity: 0;
+    pointer-events: none;
+}
+ .continent.unfocused .continent-name {
+    opacity: 0;
+}
+ .continent.positif {
+    fill: green;
+}
+ .continent.negatif {
+    fill: red;
+}
+ .continent.focused {
+    fill: none;
+}
+ .continent.focused .country {
+    -webkit-transition: stroke-width ease 1s;
+    transition: stroke-width ease 1s;
+    opacity: 1;
+}
+ .continent.focused .country.positif {
+    fill: #007100;
+}
+ .continent.focused .country.negatif {
+    fill: #cd2514;
+}
+ .continent.focused .country.faded {
+    opacity: 0;
+}
+ .continent.focused .country.focused {
+    stroke-width: 0;
+}
+ #country-details {
+    -webkit-transition: opacity ease 0.5s;
+    transition: opacity ease 0.5s;
+}
+ #country-details.faded {
+    opacity: 0;
+}
+ #country-details h2 {
+    margin-left: 300px;
+    margin-top: 0px;
+}
+ #country-details .indicator {
+    font-size: 5em;
+    margin-left: 150px;
+    margin-top: 60px;
+}
+ #country-details .indicator #man {
+    fill: #afb4bd;
+    float: left;
+    height: 150px;
+    stroke: none;
+    width: 100px;
+}
+ #country-details .indicator #man .fill-level {
+    -webkit-transition: fill ease-out 800ms;
+    transition: fill ease-out 800ms;
+    fill: #cd2514;
+}
+ #country-details .indicator .value {
+    float: left;
+    line-height: 1em;
+    margin-right: 5px;
+    margin-top: 0.5em;
+}
+ #country-details .indicator .units {
+    float: left;
+    padding-top: 0.03em;
+    margin-top: 0.5em;
+}
+ #country-details .indicator .units > * {
+    font-size: 0.4em;
+}
+ #country-details .indicator .units > .down {
+    line-height: 1em;
+}

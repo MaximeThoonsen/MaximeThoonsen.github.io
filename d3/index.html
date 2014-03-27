@@ -1,1 +1,237 @@
-Hello World d3
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://techslides.com/demos/d3/d3-continents-projections.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Continents and Map Projections with D3.js | TechSlides</title>
+    <link rel="stylesheet" type="text/css" href="css/map.css">
+</head>
+<body>
+
+<div id="top">
+    <h1>World map with continents and countries zoom</h1>
+</div>
+
+<div id="container">
+    <div id="country-details">
+        <p id="country-name"></p>
+    </div>
+</div>
+
+<script src="js/d3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
+<script>
+    var mygeo = d3.geo;
+</script>
+<script src="js/d3.geo.projection.v0.min.js"></script>
+<script>
+
+    var width = 960,
+       height = 500,
+       topMargin = 50;
+
+    var projection = d3.geo.eckert3().scale(180);
+
+    projection.rotate([0, 0]).center([0, 0]);
+
+
+    var path = d3.geo.path().projection(projection);
+
+    var graticule = d3.geo.graticule();
+
+    var svg = d3.select("#container").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class","worldmap");
+
+    var group = svg.append("g")
+            .attr("width", "100%")
+            .attr("height", "100%")
+
+    var tooltip = d3.select("#container").append("div").attr("class", "tooltip hidden");
+
+    var continents;
+
+    d3.json("data/continent-geogame-110m.json", function(error, world) {
+
+
+        var countries = topojson.feature(world, world.objects.countries);
+
+        //feature collections only have type, id, and name so i would not sitck properties in there but i dont think its invalid!
+        //http://geojson.org/geojson-spec.html#introduction
+        var asia = {type: "FeatureCollection", name: "Asia", color: "#ffbb78", id:1, features: countries.features.filter(function(d) { return d.properties.continent=="Asia"; })};
+        var africa = {type: "FeatureCollection", name: "Africa", color: "#2ca02c", id:2, features: countries.features.filter(function(d) { return d.properties.continent=="Africa"; })};
+        var europe = {type: "FeatureCollection", name: "Europe", color: "#ff7f0e", id:3, features: countries.features.filter(function(d) { return d.properties.continent=="Europe"; })};
+        var na = {type: "FeatureCollection", name: "North America", color: "#1f77b4", id:4, features: countries.features.filter(function(d) { return d.properties.continent=="North America"; })};
+        var sa = {type: "FeatureCollection", name: "South America", color: "#d62728", id:5, features: countries.features.filter(function(d) { return d.properties.continent=="South America"; })};
+
+        continents = [asia,africa,europe,na,sa];
+
+        var focus, isFocusedOnContinent, isFocusedOnCountry, previousTransformation, scaleFactor, worldmapBBox, worldmapBBoxOffsetX, worldmapBBoxOffsetY,selectedCountry;
+
+        isFocusedOnContinent = false;
+
+        isFocusedOnCountry = false;
+
+        focus = function(clickedCountry) {
+            var continent,translateX, translateY;
+            if ((clickedCountry == null) && !isFocusedOnCountry) {
+                isFocusedOnContinent = false;
+                return group.selectAll(".continent").transition().duration(200).attr("transform", "").each("end", function() {
+                    return group.selectAll(".continent").attr("class", function(d) {
+                        var classColor;
+                        if (d.id % 2 === 0) {
+                            classColor = " negatif";
+                        } else {
+                            classColor = " positif";
+                        }
+                        return 'continent' + classColor;
+                    });
+                });
+            } else if (isFocusedOnContinent) {
+                if (!isFocusedOnCountry) {
+                    isFocusedOnCountry = true;
+                    selectedCountry = clickedCountry;
+                    group.selectAll(".country").filter(function(d) {
+                        if (d !== clickedCountry) {
+                            return d;
+                        }
+                    }).attr("class", "country faded");
+                    previousTransformation = group.select(".continent.focused").attr("transform");
+                    group.selectAll(".continent").transition().duration(300).ease("linear").attr("transform", "");
+                    return group.selectAll(".country").filter(function(d) {
+                        if (d === clickedCountry) {
+                            return d;
+                        }
+                    }).attr("class", function(d) {
+                        var classColor;
+                        if (d.id % 2 === 0) {
+                            classColor = " negatif";
+                        } else {
+                            classColor = " positif";
+                        }
+                        return 'country focused' + classColor;
+                    }).transition().duration(600).attr("transform", function() {
+                        var bbox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
+                        bbox = this.getBBox();
+                        targetSize = 100;
+                        miniCountryScale = Math.min(targetSize / bbox.width, targetSize / bbox.height);
+                        miniCountryOffsetX = -bbox.x * miniCountryScale - worldmapBBoxOffsetX + topMargin * 0.5 + 0.5 * (targetSize - bbox.width * miniCountryScale);
+                        miniCountryOffsetY = -bbox.y * miniCountryScale - worldmapBBoxOffsetY + topMargin * 2 + 0.5 * (targetSize - bbox.height * miniCountryScale);
+                        return "translate(" + miniCountryOffsetX + "," + miniCountryOffsetY + ") scale(" + miniCountryScale + ")";
+                    }).each("end", function() {
+                        document.getElementById("country-details").className = "";
+                        document.getElementById("country-name").textContent = clickedCountry.properties.name;
+                    });
+                } else {
+                    document.getElementById("country-details").className = "faded";
+                    isFocusedOnCountry = false;
+                    group.selectAll(".country").attr("class", function(d) {
+                        var classColor;
+                        if (d.id % 2 === 0) {
+                            classColor = " negatif";
+                        } else {
+                            classColor = " positif";
+                        }
+                        return 'country' + classColor;
+                    });
+                    group.selectAll(".country").filter(function(d) {
+                        if (d === selectedCountry) {
+                            return d;
+                        }
+                    }).transition().attr("transform", "");
+                    return group.select(".continent.focused").transition().delay(50).duration(200).attr("transform", previousTransformation);
+                }
+            } else {
+                translateX = null;
+                translateY = null;
+                isFocusedOnContinent = true;
+                continent = clickedCountry.properties.continent;
+                group.selectAll(".continent").filter(function(d) {
+                    if (d.name !== continent) {
+                        return d;
+                    }
+                }).attr("class", function() {
+                    return this.className.animVal + " unfocused";
+                });
+                return group.selectAll(".continent").filter(function(d) {
+                    if (d.name === continent) {
+                        return d;
+                    }
+                }).attr("class", "continent focused").transition().duration(400).attr("transform", function() {
+                    var bbox, scaleFactor;
+                    bbox = this.getBBox();
+                    scaleFactor = Math.min(width * 0.7 / bbox.width, height * 0.7 / (bbox.height + topMargin));
+                    translateX = worldmapBBox.width / 2 - scaleFactor * (bbox.x + bbox.width / 2);
+                    translateY = worldmapBBox.height / 2 - scaleFactor * (bbox.y + bbox.height / 2);
+                    return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
+                });
+            }
+        };
+
+        group.selectAll(".continent").data(continents).enter().call(function() {
+            return this.append("g").attr('class', function(d) {
+                var classColor;
+                if (d.id % 2 === 0) {
+                    classColor = " negatif";
+                } else {
+                    classColor = " positif";
+                }
+                return 'continent ' + d.name.replace(' ', '') + classColor;
+            }).selectAll(".country").data(function(d) {
+                return d.features;
+            }).enter().insert("path").attr("class", function(d) {
+                var classColor;
+                if (d.id % 2 === 0) {
+                    classColor = " negatif";
+                } else {
+                    classColor = " positif";
+                }
+                return "country" + classColor;
+            }).attr("d", path).attr("id", function(d) {
+                return d.id;
+            }).attr("title", function(d) {
+                return d.name;
+            }).on("click", function(d) {
+                focus(d);
+                d3.event.stopPropagation();
+            });
+        });
+        var continent, continentBBox, _i, _len;
+
+        for (_i = 0, _len = continents.length; _i < _len; _i++) {
+            continent = continents[_i];
+            continentBBox = null;
+            group.selectAll(".continent").filter(function(d) {
+                if (d.name === continent.name) {
+                    continentBBox = this.getBBox();
+                    return d;
+                }
+            }).append("text").attr("class", "continent-name").text(function(d) {
+                return d.name;
+            }).attr("transform", function() {
+                var textOffsetX, textOffsetY;
+                textOffsetX = continentBBox.x + continentBBox.width / 2;
+                textOffsetY = continentBBox.y + continentBBox.height / 2;
+                return "translate(" + textOffsetX + "," + textOffsetY + ")";
+            });
+        }
+
+        d3.select("body").on("click", function() {
+            focus();
+            d3.event.stopPropagation();
+        });
+
+        group.attr("transform", function() {
+            var mapScaleFactor;
+            worldmapBBox = this.getBBox();
+            mapScaleFactor = 1;
+            worldmapBBoxOffsetX = 0.5 * (width - worldmapBBox.width * mapScaleFactor - worldmapBBox.x);
+            worldmapBBoxOffsetY = Math.max(0.5 * (height - worldmapBBox.height * mapScaleFactor), topMargin * 2);
+            return "translate(" + worldmapBBoxOffsetX + "," + worldmapBBoxOffsetY + ")";
+        });
+
+
+    });
+</script>
+
+</body></html>
