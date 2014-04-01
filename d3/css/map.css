@@ -28,7 +28,7 @@ div.tooltip {
     fill: none;
     position: absolute;
     top: 0;
-    left: 150px;
+    left: 0;
 }
  .continent {
     -webkit-transition: opacity ease 0.2s;

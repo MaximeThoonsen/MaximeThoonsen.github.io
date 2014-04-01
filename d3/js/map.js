@@ -1,12 +1,16 @@
-
-
-//Some variables use for the map's position
-var width = 960,
-    height = 500,
-    topMargin = 50;
-
 //They are many projections possibilities as you can see from here: https://github.com/d3/d3-geo-projection/
 var projection = d3.geo.eckert3().scale(180);
+
+//Some variables use for the map's position
+var
+    defaultWidth = 960,
+    defaultHeight = 500,
+    topMargin = 75,// If you want to show some elements at the top of your page
+    width = window.innerWidth,
+    height = window.innerHeight - topMargin,
+    mapScaleFactor = Math.min(width/defaultWidth,height/defaultHeight);
+
+
 var path = d3.geo.path().projection(projection);
 
 //We add the svg to the html
@@ -20,7 +24,7 @@ var group = svg.append("g")
     .attr("width", "100%")
     .attr("height", "100%")
 
-//You
+//You can use this function to add your own css classes
 function getClassFromNode(d) {
     if (d.id > 5) {
         return " negatif";
@@ -131,6 +135,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         }
     };
 
+    //We draw the continents
     group.selectAll(".continent").data(continents).enter().call(function() {
         return this.append("g").attr('class', function(d) {
             return 'continent ' + d.name.replace(' ', '') + getClassFromNode(d);
@@ -147,8 +152,10 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             d3.event.stopPropagation();
         });
     });
-    var continent, continentBBox, _i, _len;
 
+
+    //We here draw some attributes of continents, here we simply display the name
+    var continent, continentBBox, _i, _len;
     for (_i = 0, _len = continents.length; _i < _len; _i++) {
         continent = continents[_i];
         continentBBox = null;
@@ -167,17 +174,18 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         });
     }
 
+    //We catch the click
     d3.select("body").on("click", function() {
         focus();
         d3.event.stopPropagation();
     });
 
+    //We scale the map to a reasonnable size dynamicaly from the width of the heigth of the windows
     group.attr("transform", function() {
-        var mapScaleFactor;
         worldmapBBox = this.getBBox();
-        mapScaleFactor = 1;
+        console.log(worldmapBBox.x);
         worldmapBBoxOffsetX = 0.5 * (width - worldmapBBox.width * mapScaleFactor - worldmapBBox.x);
         worldmapBBoxOffsetY = Math.max(0.5 * (height - worldmapBBox.height * mapScaleFactor), topMargin * 2);
-        return "translate(" + worldmapBBoxOffsetX + "," + worldmapBBoxOffsetY + ")";
+        return "translate(" + worldmapBBoxOffsetX + "," + worldmapBBoxOffsetY + ") scale(" + mapScaleFactor + ")";
     });
 });
