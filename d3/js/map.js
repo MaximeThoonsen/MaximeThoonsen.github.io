@@ -1,6 +1,3 @@
-//They are many projections possibilities as you can see from here: https://github.com/d3/d3-geo-projection/
-var projection = d3.geo.eckert3().scale(180);
-
 //Some variables use for the map's position
 var
     defaultWidth = 960,
@@ -10,7 +7,8 @@ var
     mapScaleFactor = Math.min(width/defaultWidth,window.innerHeight/defaultHeight),
     height = window.innerHeight - topMargin;
 
-
+//They are many projections possibilities as you can see from here: https://github.com/d3/d3-geo-projection/
+var projection = d3.geo.eckert3().scale(180);
 var path = d3.geo.path().projection(projection);
 
 //We add the svg to the html
