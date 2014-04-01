@@ -7,8 +7,8 @@ var
     defaultHeight = 500,
     topMargin = 75,// If you want to show some elements at the top of your page
     width = window.innerWidth,
-    height = window.innerHeight - topMargin,
-    mapScaleFactor = Math.min(width/defaultWidth,height/defaultHeight);
+    mapScaleFactor = Math.min(width/defaultWidth,window.innerHeight/defaultHeight),
+    height = window.innerHeight - topMargin;
 
 
 var path = d3.geo.path().projection(projection);
@@ -180,10 +180,9 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         d3.event.stopPropagation();
     });
 
-    //We scale the map to a reasonnable size dynamicaly from the width of the heigth of the windows
+    //We scale the map to a reasonnable size dynamically from the width of the heigth of the window
     group.attr("transform", function() {
         worldmapBBox = this.getBBox();
-        console.log(worldmapBBox.x);
         worldmapBBoxOffsetX = 0.5 * (width - worldmapBBox.width * mapScaleFactor - worldmapBBox.x);
         worldmapBBoxOffsetY = Math.max(0.5 * (height - worldmapBBox.height * mapScaleFactor), topMargin * 2);
         return "translate(" + worldmapBBoxOffsetX + "," + worldmapBBoxOffsetY + ") scale(" + mapScaleFactor + ")";
