@@ -14,7 +14,7 @@ var path = d3.geo.path().projection(projection);
 //We add the svg to the html
 var svg = d3.select("#container").append("svg")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", "100%")
     .attr("class","worldmap");
 
 //We add a group where we'll put our continents and countries in
@@ -35,16 +35,16 @@ function getClassFromNode(d) {
 d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world) {
     // See here to get more info about the following line: https://github.com/mbostock/topojson
     var countries = topojson.feature(world, world.objects.countries);
-    //We group the countries in contients (We removed Antartica and we put ocenania with Asia)
-    var asia = {type: "FeatureCollection", name: "Asia", id:1, features: countries.features.filter(function(d) { return d.properties.continent=="Asia"; })};
-    var africa = {type: "FeatureCollection", name: "Africa", id:2, features: countries.features.filter(function(d) { return d.properties.continent=="Africa"; })};
-    var europe = {type: "FeatureCollection", name: "Europe", id:3, features: countries.features.filter(function(d) { return d.properties.continent=="Europe"; })};
-    var na = {type: "FeatureCollection", name: "North America", id:4, features: countries.features.filter(function(d) { return d.properties.continent=="North America"; })};
-    var sa = {type: "FeatureCollection", name: "South America", id:5, features: countries.features.filter(function(d) { return d.properties.continent=="South America"; })};
+    //We group the countries in contients (We removed Antarctica and we put oceania with Asia)
+    var asia = {type: "FeatureCollection", name: "Asia", id:1, features: countries.features.filter(function(d) { return d.properties.continent == "Asia"; })};
+    var africa = {type: "FeatureCollection", name: "Africa", id:2, features: countries.features.filter(function(d) { return d.properties.continent == "Africa"; })};
+    var europe = {type: "FeatureCollection", name: "Europe", id:3, features: countries.features.filter(function(d) { return d.properties.continent == "Europe"; })};
+    var na = {type: "FeatureCollection", name: "North America", id:4, features: countries.features.filter(function(d) { return d.properties.continent == "North America"; })};
+    var sa = {type: "FeatureCollection", name: "South America", id:5, features: countries.features.filter(function(d) { return d.properties.continent == "South America"; })};
 
     var continents = [asia,africa,europe,na,sa];
-    var focus, isFocusedOnContinent, isFocusedOnCountry, previousTransformation, scaleFactor, worldmapBBox, worldmapBBoxOffsetX, worldmapBBoxOffsetY,selectedCountrycontinent,translateX, translateY;;
-    //There is 3 levels of zoom = "world, continent and country"
+    var focus, isFocusedOnContinent, isFocusedOnCountry, previousTransformation, worldmapBBox, worldmapBBoxOffsetX, worldmapBBoxOffsetY, translateX, translateY;
+    //There are 3 levels of zoom: "world, continent and country"
     isFocusedOnContinent = false;
     isFocusedOnCountry = false;
 
@@ -77,12 +77,12 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
                 }).attr("class", function(d) {
                     return 'country focused' + getClassFromNode(d);
                 }).transition().duration(600).attr("transform", function() {
-                    var bbox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
-                    bbox = this.getBBox();
+                    var bBox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
+                    bBox = this.getBBox();
                     targetSize = 100;
-                    miniCountryScale = Math.min(targetSize / bbox.width, targetSize / bbox.height);
-                    miniCountryOffsetX = -bbox.x * miniCountryScale - worldmapBBoxOffsetX + topMargin * 0.5 + 0.5 * (targetSize - bbox.width * miniCountryScale);
-                    miniCountryOffsetY = -bbox.y * miniCountryScale - worldmapBBoxOffsetY + topMargin * 2 + 0.5 * (targetSize - bbox.height * miniCountryScale);
+                    miniCountryScale = Math.min(targetSize / bBox.width, targetSize / bBox.height);
+                    miniCountryOffsetX = -bBox.x * miniCountryScale - worldmapBBoxOffsetX + topMargin * 0.5 + 0.5 * (targetSize - bBox.width * miniCountryScale);
+                    miniCountryOffsetY = -bBox.y * miniCountryScale - worldmapBBoxOffsetY + topMargin * 2 + 0.5 * (targetSize - bBox.height * miniCountryScale);
                     return "translate(" + miniCountryOffsetX + "," + miniCountryOffsetY + ") scale(" + miniCountryScale + ")";
                 }).each("end", function() {
                     document.getElementById("country-details").className = "";
@@ -120,11 +120,11 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
                     return d;
                 }
             }).attr("class", "continent focused").transition().duration(400).attr("transform", function() {
-                var bbox, scaleFactor;
-                bbox = this.getBBox();
-                scaleFactor = Math.min(width * 0.7 / bbox.width, height * 0.7 / (bbox.height + topMargin));
-                translateX = worldmapBBox.width / 2 - scaleFactor * (bbox.x + bbox.width / 2);
-                translateY = worldmapBBox.height / 2 - scaleFactor * (bbox.y + bbox.height / 2);
+                var bBox, scaleFactor;
+                bBox = this.getBBox();
+                scaleFactor = Math.min(width * 0.7 / bBox.width, height * 0.7 / (bBox.height + topMargin));
+                translateX = worldmapBBox.width / 2 - scaleFactor * (bBox.x + bBox.width / 2);
+                translateY = worldmapBBox.height / 2 - scaleFactor * (bBox.y + bBox.height / 2);
                 return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
             });
             group.selectAll(".country").attr("class", function(d) {
