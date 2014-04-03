@@ -22,21 +22,23 @@ var group = svg.append("g")
     .attr("width", "100%")
     .attr("height", "100%")
 
-var countriesValues;
+var countriesValues, mostVisited;
 //We get the values we use to color our map
 d3.json("data/dataTheodoTravels.json", function(error, data){
-    countriesValues= data;
+    countriesValues = data;
+    mostVisited = 0;
+    for (var country in countriesValues) {
+        if (mostVisited < countriesValues[country]) {
+            mostVisited = countriesValues[country];
+        }
+    }
 });
-
 
 //You can use this function to add your own css classes
 function getClassFromNode(d) {
     if (d.id <= 5) {
         return " positif";
     }
-
-    console.log(d);
-    console.log(d.properties.name);
 
     if (countriesValues[d.properties.name]>0){
         return " positif";
@@ -155,10 +157,10 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             return d.features;
         }).enter().insert("path").attr("class", function(d) {
             return "country" + getClassFromNode(d);
+        }).attr("style", function(d) {
+            return "opacity: " + countriesValues[d.properties.name]/mostVisited;
         }).attr("d", path).attr("id", function(d) {
             return d.id;
-        }).attr("title", function(d) {
-            return d.name;
         }).on("click", function(d) {
             focus(d);
             d3.event.stopPropagation();
