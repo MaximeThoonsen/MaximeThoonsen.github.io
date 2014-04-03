@@ -22,12 +22,26 @@ var group = svg.append("g")
     .attr("width", "100%")
     .attr("height", "100%")
 
+var countriesValues;
+//We get the values we use to color our map
+d3.json("data/dataTheodoTravels.json", function(error, data){
+    countriesValues= data;
+});
+
+
 //You can use this function to add your own css classes
 function getClassFromNode(d) {
-    if (d.id > 5) {
-        return " negatif";
+    if (d.id <= 5) {
+        return " positif";
     }
-    return " positif";
+
+    console.log(d);
+    console.log(d.properties.name);
+
+    if (countriesValues[d.properties.name]>0){
+        return " positif";
+    }
+    return " negatif";
 }
 
 //We have modified the original continent-geogame-110m.json file to make zooms more easier, so some countries won't show up with all theirs parts
