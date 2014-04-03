@@ -22,12 +22,26 @@ var group = svg.append("g")
     .attr("width", "100%")
     .attr("height", "100%")
 
+var countriesValues;
+//We get the values we use to color our map
+d3.json("data/dataTheodoTravels.json", function(error, data){
+    countriesValues= data;
+});
+
+
 //You can use this function to add your own css classes
 function getClassFromNode(d) {
-    if (d.id > 5) {
-        return " negatif";
+    if (d.id <= 5) {
+        return " positif";
     }
-    return " positif";
+
+    console.log(d);
+    console.log(d.properties.name);
+
+    if (countriesValues[d.properties.name]>0){
+        return " positif";
+    }
+    return " negatif";
 }
 
 //We have modified the original continent-geogame-110m.json file to make zooms more easier, so some countries won't show up with all theirs parts
@@ -35,7 +49,7 @@ function getClassFromNode(d) {
 d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world) {
     // See here to get more info about the following line: https://github.com/mbostock/topojson
     var countries = topojson.feature(world, world.objects.countries);
-    //We group the countries in contients (We removed Antartica and we put ocenania with Asia)
+    //We group the countries in continents (We removed Antartica and we put Ocenania with Asia)
     var asia = {type: "FeatureCollection", name: "Asia", id:1, features: countries.features.filter(function(d) { return d.properties.continent=="Asia"; })};
     var africa = {type: "FeatureCollection", name: "Africa", id:2, features: countries.features.filter(function(d) { return d.properties.continent=="Africa"; })};
     var europe = {type: "FeatureCollection", name: "Europe", id:3, features: countries.features.filter(function(d) { return d.properties.continent=="Europe"; })};
