@@ -28,8 +28,9 @@ d3.json("data/dataTheodoTravels.json", function(error, data){
     countriesValues = data;
     mostVisited = 0;
     for (var country in countriesValues) {
-        if (mostVisited < countriesValues[country]) {
-            mostVisited = countriesValues[country];
+        current = parseInt(countriesValues[country])
+        if (mostVisited < current) {
+            mostVisited = current;
         }
     }
 });
