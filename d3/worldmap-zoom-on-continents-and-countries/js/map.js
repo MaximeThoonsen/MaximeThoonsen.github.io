@@ -35,18 +35,6 @@ d3.json("data/dataTheodoTravels.json", function(error, data){
     }
 });
 
-//You can use this function to add your own css classes
-function getClassFromNode(d) {
-    if (d.id <= 5) {
-        return " positif";
-    }
-
-    if (countriesValues[d.properties.name]>0){
-        return " positif";
-    }
-    return " negatif";
-}
-
 //We have modified the original continent-geogame-110m.json file to make zooms more easier, so some countries won't show up with all theirs parts
 // like French Guiana for France.
 d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world) {
