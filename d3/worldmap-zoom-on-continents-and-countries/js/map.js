@@ -7,8 +7,6 @@ var
     height = window.innerHeight - topMargin,
     mapScaleFactor = Math.min(width/defaultWidth, height/defaultHeight);
 
-console.log(mapScaleFactor);
-
 //They are many projections possibilities as you can see from here: https://github.com/d3/d3-geo-projection/
 var projection = d3.geo.eckert3().scale(180);
 var path = d3.geo.path().projection(projection);
