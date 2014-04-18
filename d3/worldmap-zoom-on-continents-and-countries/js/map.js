@@ -138,6 +138,9 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         }
     };
 
+    baseValue = 90;
+    remainder = 255 - baseValue;
+
     //We draw the continents
     group.selectAll(".continent").data(continents).enter().call(function() {
         return this.append("g").attr('class', function(d) {
@@ -147,8 +150,11 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         }).enter().insert("path").attr("class", function(d) {
             return "country";
         }).attr("fill", function(d) {
-            value = Math.round(255  * countriesValues[d.properties.name]/mostVisited);
-            return "rgb(" + value + ", " + (255-value) + ", " + (255-value) + ")";
+            value = Math.round(remainder  * countriesValues[d.properties.name]/mostVisited);
+            red = baseValue;
+            green = baseValue;
+            blue = (baseValue + value);
+            return "rgb(" + red + ", " + green + ", " + blue + ")";
         }).attr("d", path).attr("id", function(d) {
             return d.id;
         }).on("click", function(d) {
