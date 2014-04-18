@@ -50,23 +50,17 @@ div.tooltip {
     font-size: 2em;
     font-weight: bold;
     opacity: 1;
+    pointer-events: none;
     text-anchor: middle;
 }
  .continent.focused {
     stroke-width: 0.5px;
 }
- .continent.focused .continent-name {
-    opacity: 0;
-}
- .continent.unfocused {
-    opacity: 0;
-    pointer-events: none;
-}
+ .continent.unfocused,
+ .continent.focused .continent-name,
  .continent.unfocused .continent-name {
     opacity: 0;
-}
- .continent.focused {
-    fill: none;
+    pointer-events: none;
 }
  .continent.focused .country {
     -webkit-transition: stroke-width ease 1s;
