@@ -127,9 +127,9 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             }).attr("class", "continent focused").transition().duration(400).attr("transform", function() {
                 var bBox, scaleFactor;
                 bBox = this.getBBox();
-                scaleFactor = Math.min(width * 0.7 / bBox.width, height * 0.7 / (bBox.height + topMargin));
-                translateX = worldmapBBox.width / 2 - scaleFactor * (bBox.x + bBox.width / 2);
-                translateY = worldmapBBox.height / 2 - scaleFactor * (bBox.y + bBox.height / 2);
+                scaleFactor = Math.min(width / bBox.width, height / bBox.height);
+                translateX = width / (2 * mapScaleFactor) - scaleFactor * (bBox.x + bBox.width / 2);
+                translateY = height / 2 - scaleFactor * (bBox.y + bBox.height / 2);
                 return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
             });
             group.selectAll(".country").attr("class", function(d) {
