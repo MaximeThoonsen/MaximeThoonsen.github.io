@@ -32,6 +32,9 @@ div.tooltip {
 }
  .continent {
     -webkit-transition: opacity ease 0.2s;
+    -moz-transition: opacity ease 0.2s;
+    -ms-transition: opacity ease 0.2s;
+    -o-transition: opacity ease 0.2s;
     transition: opacity ease 0.2s;
     opacity: 1;
     stroke: white;
@@ -39,11 +42,15 @@ div.tooltip {
 }
  .continent .continent-name {
     -webkit-transition: opacity ease 0.4s;
+    -moz-transition: opacity ease 0.4s;
+    -ms-transition: opacity ease 0.4s;
+    -o-transition: opacity ease 0.4s;
     transition: opacity ease 0.4s;
-    fill: #303241;
+    fill: black;
     font-size: 2em;
     font-weight: bold;
     opacity: 1;
+    text-anchor: middle;
 }
  .continent.focused {
     stroke-width: 0.5px;
@@ -58,25 +65,16 @@ div.tooltip {
  .continent.unfocused .continent-name {
     opacity: 0;
 }
- .continent.positif {
-    fill: green;
-}
- .continent.negatif {
-    fill: red;
-}
  .continent.focused {
     fill: none;
 }
  .continent.focused .country {
     -webkit-transition: stroke-width ease 1s;
+    -moz-transition: stroke-width ease 1s;
+    -ms-transition: stroke-width ease 1s;
+    -o-transition: stroke-width ease 1s;
     transition: stroke-width ease 1s;
     opacity: 1;
-}
- .continent.focused .country.positif {
-    fill: #007100;
-}
- .continent.focused .country.negatif {
-    fill: #cd2514;
 }
  .continent.focused .country.faded {
     opacity: 0;

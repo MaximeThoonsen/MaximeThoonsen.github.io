@@ -4,8 +4,10 @@ var
     defaultHeight = 500,
     topMargin = 75,// If you want to show some elements at the top of your page
     width = window.innerWidth,
-    mapScaleFactor = Math.min(width/defaultWidth,window.innerHeight/defaultHeight),
-    height = window.innerHeight - topMargin;
+    height = window.innerHeight - topMargin,
+    mapScaleFactor = Math.min(width/defaultWidth, height/defaultHeight);
+
+console.log(mapScaleFactor);
 
 //They are many projections possibilities as you can see from here: https://github.com/d3/d3-geo-projection/
 var projection = d3.geo.eckert3().scale(180);
@@ -35,18 +37,6 @@ d3.json("data/dataTheodoTravels.json", function(error, data){
     }
 });
 
-//You can use this function to add your own css classes
-function getClassFromNode(d) {
-    if (d.id <= 5) {
-        return " positif";
-    }
-
-    if (countriesValues[d.properties.name]>0){
-        return " positif";
-    }
-    return " negatif";
-}
-
 //We have modified the original continent-geogame-110m.json file to make zooms more easier, so some countries won't show up with all theirs parts
 // like French Guiana for France.
 d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world) {
@@ -72,7 +62,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             isFocusedOnContinent = false;
             group.selectAll(".continent").transition().duration(200).attr("transform", "").each("end", function() {
                 group.selectAll(".continent").attr("class", function(d) {
-                    return 'continent' + getClassFromNode(d);
+                    return 'continent';
                 });
             });
         } else if (isFocusedOnContinent) {
@@ -92,7 +82,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
                         return d;
                     }
                 }).attr("class", function(d) {
-                    return 'country focused' + getClassFromNode(d);
+                    return 'country focused';
                 }).transition().duration(600).attr("transform", function() {
                     var bBox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
                     bBox = this.getBBox();
@@ -110,7 +100,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
                 document.getElementById("country-details").className = "faded";
                 isFocusedOnCountry = false;
                 group.selectAll(".country").attr("class", function(d) {
-                    return 'country' + getClassFromNode(d);
+                    return 'country';
                 });
                 group.selectAll(".country").filter(function(d) {
                     if (d === selectedCountry) {
@@ -145,7 +135,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
                 return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
             });
             group.selectAll(".country").attr("class", function(d) {
-                return 'country' + getClassFromNode(d);
+                return 'country';
             });
         }
     };
@@ -153,13 +143,14 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
     //We draw the continents
     group.selectAll(".continent").data(continents).enter().call(function() {
         return this.append("g").attr('class', function(d) {
-            return 'continent ' + d.name.replace(' ', '') + getClassFromNode(d);
+            return 'continent ' + d.name.replace(' ', '');
         }).selectAll(".country").data(function(d) {
             return d.features;
         }).enter().insert("path").attr("class", function(d) {
-            return "country" + getClassFromNode(d);
-        }).attr("style", function(d) {
-            return "opacity: " + countriesValues[d.properties.name]/mostVisited;
+            return "country";
+        }).attr("fill", function(d) {
+            value = Math.round(255  * countriesValues[d.properties.name]/mostVisited);
+            return "rgb(" + value + ", " + (255-value) + ", " + (255-value) + ")";
         }).attr("d", path).attr("id", function(d) {
             return d.id;
         }).on("click", function(d) {
