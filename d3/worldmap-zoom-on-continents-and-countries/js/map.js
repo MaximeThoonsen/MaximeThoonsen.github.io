@@ -139,14 +139,10 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             }
         }).attr("class", "continent focused").transition().duration(400).attr("transform", function() {
             var bBox, scaleFactor;
-            console.log(container.clientHeight);
             bBox = this.getBBox();
             scaleFactor = Math.min(width / bBox.width, height / bBox.height);
             translateX = 0.5 * width - scaleFactor * (bBox.x + 0.5 * bBox.width);
             translateY = 0.5 * height - scaleFactor * (bBox.y + 0.5 * bBox.height);
-            console.log("continent : " + bBox.width + " " + bBox.height + " " + bBox.x);
-            console.log("map : " + width + " " + height + " " + translateX);
-            console.log("scaleFactor : " + scaleFactor);
             return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
         });
         group.selectAll(".country").attr("class", function(d) {
