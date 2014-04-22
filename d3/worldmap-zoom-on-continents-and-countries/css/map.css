@@ -5,9 +5,11 @@
     stroke-width: .5px;
 }
 
-#container {
-    padding:20px;
-    clear:both;
+#map-container {
+    margin: 20px;
+    clear: both;
+    height: 400px;
+    border: 1px solid #ccc;
 }
 
 .hidden {
@@ -24,108 +26,99 @@ div.tooltip {
     position: absolute;
 }
 
- .worldmap {
+.worldmap {
     fill: none;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
- .continent {
+.continent {
     -webkit-transition: opacity ease 0.2s;
+    -moz-transition: opacity ease 0.2s;
+    -ms-transition: opacity ease 0.2s;
+    -o-transition: opacity ease 0.2s;
     transition: opacity ease 0.2s;
     opacity: 1;
     stroke: white;
     stroke-width: 0px;
 }
- .continent .continent-name {
+.continent .continent-name {
     -webkit-transition: opacity ease 0.4s;
+    -moz-transition: opacity ease 0.4s;
+    -ms-transition: opacity ease 0.4s;
+    -o-transition: opacity ease 0.4s;
     transition: opacity ease 0.4s;
-    fill: #303241;
+    fill: black;
     font-size: 2em;
     font-weight: bold;
     opacity: 1;
+    pointer-events: none;
+    text-anchor: middle;
 }
- .continent.focused {
+.continent.focused {
     stroke-width: 0.5px;
 }
- .continent.focused .continent-name {
-    opacity: 0;
-}
- .continent.unfocused {
+.continent.unfocused,
+.continent.focused .continent-name,
+.continent.unfocused .continent-name {
     opacity: 0;
     pointer-events: none;
 }
- .continent.unfocused .continent-name {
-    opacity: 0;
-}
- .continent.positif {
-    fill: green;
-}
- .continent.negatif {
-    fill: red;
-}
- .continent.focused {
-    fill: none;
-}
- .continent.focused .country {
+.continent.focused .country {
     -webkit-transition: stroke-width ease 1s;
+    -moz-transition: stroke-width ease 1s;
+    -ms-transition: stroke-width ease 1s;
+    -o-transition: stroke-width ease 1s;
     transition: stroke-width ease 1s;
     opacity: 1;
 }
- .continent.focused .country.positif {
-    fill: #007100;
-}
- .continent.focused .country.negatif {
-    fill: #cd2514;
-}
- .continent.focused .country.faded {
+.continent.focused .country.faded {
     opacity: 0;
 }
- .continent.focused .country.focused {
+.continent.focused .country.focused {
     stroke-width: 0;
 }
- #country-details {
+#country-details {
     -webkit-transition: opacity ease 0.5s;
     transition: opacity ease 0.5s;
+    position: absolute;
+    margin: 20px;
 }
- #country-details.faded {
+#country-details.faded {
     opacity: 0;
 }
- #country-details h2 {
+#country-details h2 {
     margin-left: 300px;
     margin-top: 0px;
 }
- #country-details .indicator {
+#country-details .indicator {
     font-size: 5em;
     margin-left: 150px;
     margin-top: 60px;
 }
- #country-details .indicator #man {
+#country-details .indicator #man {
     fill: #afb4bd;
     float: left;
     height: 150px;
     stroke: none;
     width: 100px;
 }
- #country-details .indicator #man .fill-level {
+#country-details .indicator #man .fill-level {
     -webkit-transition: fill ease-out 800ms;
     transition: fill ease-out 800ms;
     fill: #cd2514;
 }
- #country-details .indicator .value {
+#country-details .indicator .value {
     float: left;
     line-height: 1em;
     margin-right: 5px;
     margin-top: 0.5em;
 }
- #country-details .indicator .units {
+#country-details .indicator .units {
     float: left;
     padding-top: 0.03em;
     margin-top: 0.5em;
 }
- #country-details .indicator .units > * {
+#country-details .indicator .units > * {
     font-size: 0.4em;
 }
- #country-details .indicator .units > .down {
+#country-details .indicator .units > .down {
     line-height: 1em;
 }
