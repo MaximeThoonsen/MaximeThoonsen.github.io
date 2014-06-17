@@ -45,8 +45,7 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
     var sa = {type: "FeatureCollection", name: "South America", id:5, features: countries.features.filter(function(d) { return d.properties.continent == "South America"; })};
 
     var continents = [asia,africa,europe,na,sa];
-    var changeFocus, previousTransformation, worldScaleFactor, worldmapBBox, worldmapBBoxOffsetX, worldmapBBoxOffsetY, translateX, translateY;
-    // There are 3 levels of zoom: "world, continent and country"
+    var worldScaleFactor, worldmapBBox, worldmapBBoxOffsetX, worldmapBBoxOffsetY;
 
     var worldDefaultTransformation = undefined;
 
@@ -63,116 +62,15 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         } else {
             group.transition().attr("transform", worldDefaultTransformation);
         }
-        
-    };
-    
-    zoomContinentToWorld = function() {
-        focusLevel = "world";
-        group.selectAll(".continent").transition().duration(200).attr("transform", "").each("end", function() {
-            group.selectAll(".continent").attr("class", function(d) {
-                return 'continent';
-            });
-        });
-    };
 
-    zoomContinentToCountry = function(clickedCountry) {
-        focusLevel = "country";
-        selectedCountry = clickedCountry;
-        group.selectAll(".country").filter(function(d) {
-            if (d !== clickedCountry) {
-                return d;
-            }
-        }).attr("class", "country faded");
-        previousTransformation = group.select(".continent.focused").attr("transform");
-        group.selectAll(".continent").transition().duration(300).ease("linear").attr("transform", "");
-        return group.selectAll(".country").filter(function(d) {
-            if (d === clickedCountry) {
-                return d;
-            }
-        }).attr("class", function(d) {
-            return 'country focused';
-        }).transition().duration(600).attr("transform", function() {
-            var bBox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
-            bBox = this.getBBox();
-            targetSize = 100;
-            miniCountryScale = Math.min(targetSize / bBox.width, targetSize / bBox.height);
-            miniCountryOffsetX = -bBox.x * miniCountryScale - worldmapBBoxOffsetX + 0.5 * (targetSize - bBox.width * miniCountryScale);
-            miniCountryOffsetY = -bBox.y * miniCountryScale - worldmapBBoxOffsetY + 0.5 * (targetSize - bBox.height * miniCountryScale);
-            return "translate(" + miniCountryOffsetX + "," + miniCountryOffsetY + ") scale(" + miniCountryScale + ")";
-        }).each("end", function() {
-            document.getElementById("country-details").className = "";
-            document.getElementById("country-name").textContent = clickedCountry.properties.name;
-        });
-    };
-
-    zoomCountryToContinent = function() {
-        document.getElementById("country-details").className = "faded";
-        focusLevel = "continent";
-        group.selectAll(".country").attr("class", function(d) {
-            return 'country';
-        });
-        group.selectAll(".country").filter(function(d) {
-            if (d === selectedCountry) {
-                return d;
-            }
-        }).transition().attr("transform", "");
-        group.select(".continent.focused").transition().delay(50).duration(200).attr("transform", previousTransformation);
-    };
-
-    zoomWorldToContinent = function(clickedCountry) {
-        group.transition().attr("transform", "");
-
-        translateX = null;
-        translateY = null;
-        focusLevel = "continent";
-        continent = clickedCountry.properties.continent;
-        group.selectAll(".continent").filter(function(d) {
-            if (d.name !== continent) {
-                return d;
-            }
-        }).attr("class", function() {
-            return this.className.animVal + " unfocused";
-        });
-        group.selectAll(".continent").filter(function(d) {
-            if (d.name === continent) {
-                return d;
-            }
-        }).attr("class", "continent focused").transition().duration(400).attr("transform", function() {
-            var bBox, scaleFactor;
-            bBox = this.getBBox();
-            scaleFactor = Math.min(width / bBox.width, height / bBox.height);
-            translateX = 0.5 * width - scaleFactor * (bBox.x + 0.5 * bBox.width);
-            translateY = 0.5 * height - scaleFactor * (bBox.y + 0.5 * bBox.height);
-            return "translate(" + translateX + "," + translateY + ") scale(" + scaleFactor + ")";
-        });
-        group.selectAll(".country").attr("class", function(d) {
-            return 'country';
-        });
-    };
-
-    var focusLevel = "world";
-
-    changeFocus = function(clickedCountry) {
-        if (clickedCountry != null) {
-            if (focusLevel == "world") {
-                zoomWorldToContinent(clickedCountry);
-            } else if (focusLevel == "continent") {
-                zoomContinentToCountry(clickedCountry);
-            }
-        } else if (clickedCountry == null) {
-            if (focusLevel == "country") {
-                zoomCountryToContinent();
-            } else if (focusLevel == "continent") {
-                fitWorld();
-                zoomContinentToWorld();
-            }
-        }
     };
 
     baseValue = 69;
     remainder = 255 - baseValue;
 
-    // We draw the continents
+    //!!!!!
+    // We draw the continents here
+    //!!!!!
     group.selectAll(".continent").data(continents).enter().call(function() {
         return this.append("g").attr('class', function(d) {
             return 'continent ' + d.name.replace(' ', '');
@@ -187,9 +85,6 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             return "rgb(" + red + ", " + green + ", " + blue + ")";
         }).attr("d", path).attr("id", function(d) {
             return d.id;
-        }).on("click", function(d) {
-            changeFocus(d);
-            d3.event.stopPropagation();
         });
     });
 
@@ -212,13 +107,6 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             return "translate(" + textOffsetX + "," + textOffsetY + ")";
         });
     }
-
-    // We catch the click
-    d3.select("body").on("click", function() {
-        changeFocus();
-        d3.event.stopPropagation();
-    });
-
     // We scale the map to fit the #map-container div
     fitWorld();
 });

@@ -1,0 +1,124 @@
+#graticule {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .5;
+    stroke-width: .5px;
+}
+
+#map-container {
+    margin: 20px;
+    clear: both;
+    height: 400px;
+    border: 1px solid #ccc;
+}
+
+.hidden {
+    display: none;
+}
+div.tooltip {
+    color: #222;
+    background: #fff;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    box-shadow: 0px 0px 2px 0px #a6a6a6;
+    opacity: 0.9;
+    position: absolute;
+}
+
+.worldmap {
+    fill: none;
+}
+.continent {
+    -webkit-transition: opacity ease 0.2s;
+    -moz-transition: opacity ease 0.2s;
+    -ms-transition: opacity ease 0.2s;
+    -o-transition: opacity ease 0.2s;
+    transition: opacity ease 0.2s;
+    opacity: 1;
+    stroke: white;
+    stroke-width: 0px;
+}
+.continent .continent-name {
+    -webkit-transition: opacity ease 0.4s;
+    -moz-transition: opacity ease 0.4s;
+    -ms-transition: opacity ease 0.4s;
+    -o-transition: opacity ease 0.4s;
+    transition: opacity ease 0.4s;
+    fill: black;
+    font-size: 2em;
+    font-weight: bold;
+    opacity: 1;
+    pointer-events: none;
+    text-anchor: middle;
+}
+.continent.focused {
+    stroke-width: 0.5px;
+}
+.continent.unfocused,
+.continent.focused .continent-name,
+.continent.unfocused .continent-name {
+    opacity: 0;
+    pointer-events: none;
+}
+.continent.focused .country {
+    -webkit-transition: stroke-width ease 1s;
+    -moz-transition: stroke-width ease 1s;
+    -ms-transition: stroke-width ease 1s;
+    -o-transition: stroke-width ease 1s;
+    transition: stroke-width ease 1s;
+    opacity: 1;
+}
+.continent.focused .country.faded {
+    opacity: 0;
+}
+.continent.focused .country.focused {
+    stroke-width: 0;
+}
+#country-details {
+    -webkit-transition: opacity ease 0.5s;
+    transition: opacity ease 0.5s;
+    position: absolute;
+    margin: 20px;
+}
+#country-details.faded {
+    opacity: 0;
+}
+#country-details h2 {
+    margin-left: 300px;
+    margin-top: 0px;
+}
+#country-details .indicator {
+    font-size: 5em;
+    margin-left: 150px;
+    margin-top: 60px;
+}
+#country-details .indicator #man {
+    fill: #afb4bd;
+    float: left;
+    height: 150px;
+    stroke: none;
+    width: 100px;
+}
+#country-details .indicator #man .fill-level {
+    -webkit-transition: fill ease-out 800ms;
+    transition: fill ease-out 800ms;
+    fill: #cd2514;
+}
+#country-details .indicator .value {
+    float: left;
+    line-height: 1em;
+    margin-right: 5px;
+    margin-top: 0.5em;
+}
+#country-details .indicator .units {
+    float: left;
+    padding-top: 0.03em;
+    margin-top: 0.5em;
+}
+#country-details .indicator .units > * {
+    font-size: 0.4em;
+}
+#country-details .indicator .units > .down {
+    line-height: 1em;
+}
