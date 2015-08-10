@@ -63,9 +63,8 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         } else {
             group.transition().attr("transform", worldDefaultTransformation);
         }
-        
     };
-    
+
     zoomContinentToWorld = function() {
         focusLevel = "world";
         group.selectAll(".continent").transition().duration(200).attr("transform", "").each("end", function() {
@@ -94,14 +93,15 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
         }).transition().duration(600).attr("transform", function() {
             var bBox, miniCountryOffsetX, miniCountryOffsetY, miniCountryScale, targetSize;
             bBox = this.getBBox();
-            targetSize = 100;
+            targetSize = Math.min(width/2, height/2);
             miniCountryScale = Math.min(targetSize / bBox.width, targetSize / bBox.height);
-            miniCountryOffsetX = -bBox.x * miniCountryScale - worldmapBBoxOffsetX + 0.5 * (targetSize - bBox.width * miniCountryScale);
-            miniCountryOffsetY = -bBox.y * miniCountryScale - worldmapBBoxOffsetY + 0.5 * (targetSize - bBox.height * miniCountryScale);
+            miniCountryOffsetX = -bBox.x * miniCountryScale;
+            miniCountryOffsetY = -bBox.y * miniCountryScale;
             return "translate(" + miniCountryOffsetX + "," + miniCountryOffsetY + ") scale(" + miniCountryScale + ")";
         }).each("end", function() {
             document.getElementById("country-details").className = "";
-            document.getElementById("country-name").textContent = clickedCountry.properties.name;
+            document.getElementById("country-name").textContent =
+              clickedCountry.properties.name +' '+countriesValues[clickedCountry.properties.name]+"/"+mostVisited;
         });
     };
 

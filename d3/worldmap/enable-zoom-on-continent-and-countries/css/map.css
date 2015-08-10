@@ -12,6 +12,16 @@
     border: 1px solid #ccc;
 }
 
+#country-details {
+  width: 100%;
+  z-index: -20;
+}
+
+#country-name {
+  font-size: 5em;
+  text-align: center;
+}
+
 .hidden {
     display: none;
 }
