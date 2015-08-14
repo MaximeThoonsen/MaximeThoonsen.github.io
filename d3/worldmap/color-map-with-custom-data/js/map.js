@@ -78,11 +78,12 @@ d3.json("data/continent-geogame-110m-countrieszoom.json", function(error, world)
             return d.features;
         }).enter().insert("path").attr("class", "country")
         .attr("fill", function(d) {
+            if (countriesValues[d.properties.name] == 0){
+              return "rgb(0, 10, 0)";
+            }
             var value = Math.round(remainder * countriesValues[d.properties.name]/mostVisited);
-            var red = 69;
-            var green = 69;
-            var blue = baseValue + value;
-            return "rgb(" + red + ", " + green + ", " + blue + ")";
+            var green = baseValue + value;
+            return "rgb(0," + green + ",0)";
         }).attr("d", path).attr("id", function(d) {
             return d.id;
         });

@@ -45,7 +45,9 @@ div.tooltip {
     -ms-transition: opacity ease 0.4s;
     -o-transition: opacity ease 0.4s;
     transition: opacity ease 0.4s;
-    fill: black;
+    fill: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
     font-size: 2em;
     font-weight: bold;
     opacity: 1;
