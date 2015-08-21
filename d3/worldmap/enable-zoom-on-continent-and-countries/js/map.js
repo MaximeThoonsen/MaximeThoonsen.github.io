@@ -21,7 +21,7 @@ var group = svg.append("g")
 
 var countriesValues, mostVisited;
 // We get the values we use to color our map
-d3.json("data/dataTheodoTravels.json", function(error, data) {
+d3.json("data/dataTheodoTravels2015.json", function(error, data) {
     countriesValues = data;
     mostVisited = 0;
     for (var country in countriesValues) {
